@@ -1,0 +1,59 @@
+<style>
+html {
+	background-color: rgb(10,10,10);
+}
+pre {
+	padding: 20px;
+	color: white;
+}
+</style>
+<pre>
+<code>
+FLAG = "CATF{cec!_3st_un_exemp1e_de_fl4g_qui_n_est_m3me_pas_d3_la_b0nne_l0ngu3ur}"
+
+class LFSR:
+
+    def __init__(self, i):
+        self.seed = self.gen_seed(i)
+        self.state = self.seed
+
+    def gen_seed(self, i):
+        while i == None or i == 0:
+            i = urandom(2)[0]
+        seed = [int(x) for x in bin(i)[2:]]
+        while len(seed) < 9:
+            seed += [0]
+        return seed[:9]
+
+    def next(self):
+        self.state = [(self.state[0] + self.state[5] + self.state[7] + self.state[8]) % 2] + self.state[:-1]
+
+
+class getFlag:
+
+    def __init__(self, FLAG):
+        self.flag = FLAG.encode()
+
+    def encrypt(self):
+        l = LFSR(None)
+        for k in range(urandom(1)[0]):
+            l.next()
+
+        encrypted_flag = b""
+        for k in range(len(self.flag)):
+            n = (-1)**l.state[0]
+            key = ((n*sum([(2*l.state[x+1])**x for x in range(len(l.state[1:]))]))%255)
+            encrypted_flag += (self.flag[k] ^ key).to_bytes(1, 'big')
+            for i in range(urandom(1)[0]):
+                l.next()
+        return encrypted_flag
+
+
+
+f = getFlag(FLAG)
+f.encrypt()
+
+
+# route pour l'api : /flag
+</code>
+</pre>
