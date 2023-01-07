@@ -119,7 +119,7 @@ def calc_cycle_bits(graine):
 
 Et on traduit ce cycle de bits en cycle de clefs selon la méthode `encrypt` de la classe `getFlag`.
 
-```pyhton
+```python
 def calc_cycle_clefs(cycle_bits):
         cycle_clefs = []
         for bits in cycle_bits:
